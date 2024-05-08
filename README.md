@@ -11,33 +11,33 @@ This repo allows you link `tree-sitter`, as well as a parser to a Rust WebAssemb
 
 ## Steps
 
-1. Compile the parser you want with `tree-sitter generate`
-2. Move the parser from `src/parser.c`, into this library at `lib/src/imported_parser.c`
+a. Compile the parser you want with `tree-sitter generate`
+b. Move the parser from `src/parser.c`, into this library at `lib/src/imported_parser.c`
 
-  a. If The parser has a `scanner.c`, move that into `lib/src/imported_scanner.c`
+  1. If The parser has a `scanner.c`, move that into `lib/src/imported_scanner.c`
 
-3. In the `imported_parser.c` file (and in the `imported_scanner.c` file), change all the `tree-sitter` includes to be local
+c. In the `imported_parser.c` file (and in the `imported_scanner.c` file), change all the `tree-sitter` includes to be local
 
 ```diff
 - #include "tree-sitter/parser.h"
 + #include "parser.h"
 ```
-  a. If you have an `imported_scanner.c`, include that in the parser file
+  1. If you have an `imported_scanner.c`, include that in the parser file
 
 ```diff
 + #include "imported_scanner.c"
 ```
-4. Compile a `compile_commands.json`
+d. Compile a `compile_commands.json`
 ```shell
 meson setup build --buildtype=release --cross-file=wasm.txt --default-library=static
 ```
 
-5. Run the transpiler
+e. Run the transpiler
 ```shell
 bash transpile.sh
 ```
 
-6. Run `cargo check`, there should be a small amount of errors. Fix them
+f. Run `cargo check`, there should be a small amount of errors. Fix them
 
   a. There is one error with an easy fix that is consistent.
   ```
@@ -57,7 +57,7 @@ pub unsafe extern "C" fn tree_sitter_xxxx() -> *const TSLanguage {
 }
 ```
 
-7. Profit! Include new `tree-sitter` in your project
+g. Profit! Include new `tree-sitter` in your project
 ```toml
 tree-sitter = { path = "tree-sitter/lib" }
 ```
