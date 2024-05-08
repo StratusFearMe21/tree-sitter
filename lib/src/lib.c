@@ -2,6 +2,7 @@
 
 #include "./alloc.c"
 #include "./get_changed_ranges.c"
+#include "./imported_parser.c"
 #include "./language.c"
 #include "./lexer.c"
 #include "./node.c"
@@ -9,6 +10,6 @@
 #include "./query.c"
 #include "./stack.c"
 #include "./subtree.c"
-#include "./tree_cursor.c"
 #include "./tree.c"
+#include "./tree_cursor.c"
 #include "./wasm_store.c"

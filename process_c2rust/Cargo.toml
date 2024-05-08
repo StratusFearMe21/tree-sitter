@@ -1,0 +1,14 @@
+[package]
+name = "process_c2rust"
+version = "0.0.0"
+edition = "2018"
+license = "MIT"
+
+[[bin]]
+name = "process_c2rust"
+path = "src/main.rs"
+
+[dependencies]
+indicatif = { version = "0.17.8", features = ["rayon"] }
+rayon = "1.10.0"
+syn = { version = "1", features = ["full", "visit-mut"] }

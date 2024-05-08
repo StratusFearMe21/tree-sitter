@@ -1,7 +1,7 @@
 [package]
 name = "tree-sitter"
 version.workspace = true
-description = "Rust bindings to the Tree-sitter parsing library"
+description = "Rust bindings to the Tree-sitter parsing library, with a pure Rust runtime via c2rust"
 authors.workspace = true
 edition.workspace = true
 rust-version = "1.65"
@@ -11,9 +11,6 @@ repository.workspace = true
 license.workspace = true
 keywords.workspace = true
 categories = ["api-bindings", "parsing", "text-editors"]
-
-build = "binding_rust/build.rs"
-links = "tree-sitter"
 
 include = [
   "/binding_rust/*",
@@ -25,21 +22,25 @@ include = [
   "/include/tree_sitter/api.h",
 ]
 
+build = "binding_rust/build.rs"
+
 [features]
 wasm = ["wasmtime-c-api"]
+capi = ["errno", "libc"]
 
 [dependencies]
 regex.workspace = true
+c2rust-bitfields = "0.3"
+once_cell = "1.3.1"
+errno = { version = "0.3", optional = true }
+libc = { version = "0.2", optional = true }
+instant = { version = "0.1.12", features = ["wasm-bindgen"] }
 
 [dependencies.wasmtime-c-api]
 version = "19"
 optional = true
 package = "wasmtime-c-api-impl"
 default-features = false
-
-[build-dependencies]
-bindgen = { version = "0.69.4", optional = true }
-cc.workspace = true
 
 [lib]
 path = "binding_rust/lib.rs"

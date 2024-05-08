@@ -1,6 +1,8 @@
 log*.html
 
 .idea
+.ccls-cache
+compile_commands.json
 *.xcodeproj
 .vscode
 .cache
@@ -12,6 +14,10 @@ test/fixtures/grammars/*
 !test/fixtures/grammars/.gitkeep
 package-lock.json
 node_modules
+lib/src/imported_parser.c
+lib/src/imported_scanner.c
+lib/src/processed
+lib/binding_rust/core_wrapper/core
 
 docs/assets/js/tree-sitter.js
 

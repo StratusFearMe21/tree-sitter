@@ -2,7 +2,6 @@ name: Build & Test
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-D warnings"
   CROSS_DEBUG: 1
 
 on:
@@ -141,7 +140,7 @@ jobs:
       if: ${{ !matrix.cli-only && !matrix.use-cross }} # No sense to build on the same Github runner hosts many times
       run: script/build-wasm
 
-    - run: $BUILD_CMD build --release --target=${{ matrix.target }} --features=${{ matrix.cli_features }}
+    - run: $BUILD_CMD build --release --target=${{ matrix.target }} # --features=${{ matrix.cli_features }}
 
     - run: script/fetch-fixtures
 
@@ -158,7 +157,7 @@ jobs:
 
     - name: Run main tests
       if: ${{ !matrix.cli-only && inputs.run_test }} # Can't natively run CLI on Github runner's host
-      run: $BUILD_CMD test --target=${{ matrix.target }} --features=${{ matrix.cli_features }}
+      run: $BUILD_CMD test --target=${{ matrix.target }} # --features=${{ matrix.cli_features }}
 
     - name: Run wasm tests
       if: ${{ !matrix.cli-only && !matrix.use-cross && inputs.run_test }} # See comment for the "Build wasm library" step

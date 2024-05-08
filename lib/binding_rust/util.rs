@@ -1,7 +1,5 @@
 use std::os::raw::c_void;
 
-use super::FREE_FN;
-
 /// A raw pointer and a length, exposed as an iterator.
 pub struct CBufferIter<T> {
     ptr: *mut T,
@@ -39,7 +37,7 @@ impl<T: Copy> ExactSizeIterator for CBufferIter<T> {}
 impl<T> Drop for CBufferIter<T> {
     fn drop(&mut self) {
         if !self.ptr.is_null() {
-            unsafe { (FREE_FN)(self.ptr.cast::<c_void>()) };
+            unsafe { super::ffi::ts_free(self.ptr.cast::<c_void>()) };
         }
     }
 }

@@ -1,21 +1,68 @@
-# tree-sitter
+# tree-sitter-c2rust (with parser compatibility)
 
-[![DOI](https://zenodo.org/badge/14164618.svg)](https://zenodo.org/badge/latestdoi/14164618)
-[![discord][discord]](https://discord.gg/w7nTvsVJhm)
-[![matrix][matrix]](https://matrix.to/#/#tree-sitter-chat:matrix.org)
+This repo allows you link `tree-sitter`, as well as a parser to a Rust WebAssembly project.
 
-Tree-sitter is a parser generator tool and an incremental parsing library. It can build a concrete syntax tree for a source file and efficiently update the syntax tree as the source file is edited. Tree-sitter aims to be:
+## You'll need
 
-- **General** enough to parse any programming language
-- **Fast** enough to parse on every keystroke in a text editor
-- **Robust** enough to provide useful results even in the presence of syntax errors
-- **Dependency-free** so that the runtime library (which is written in pure C) can be embedded in any application
+- emscripten (emcc)
+- mesonbuild
+- c2rust
+- A unix based environment (This procedure has been tested under a Linux machine)
 
-## Links
-- [Documentation](https://tree-sitter.github.io)
-- [Rust binding](lib/binding_rust/README.md)
-- [WASM binding](lib/binding_web/README.md)
-- [Command-line interface](cli/README.md)
+## Steps
 
-[discord]: https://img.shields.io/discord/1063097320771698699?logo=discord&label=discord
-[matrix]: https://img.shields.io/matrix/tree-sitter-chat%3Amatrix.org?logo=matrix&label=matrix
+1. Compile the parser you want with `tree-sitter generate`
+2. Move the parser from `src/parser.c`, into this library at `lib/src/imported_parser.c`
+
+  a. If The parser has a `scanner.c`, move that into `lib/src/imported_scanner.c`
+
+3. In the `imported_parser.c` file (and in the `imported_scanner.c` file), change all the `tree-sitter` includes to be local
+
+```diff
+- #include "tree-sitter/parser.h"
++ #include "parser.h"
+```
+  a. If you have an `imported_scanner.c`, include that in the parser file
+
+```diff
++ #include "imported_scanner.c"
+```
+4. Compile a `compile_commands.json`
+```shell
+meson setup build --buildtype=release --cross-file=wasm.txt --default-library=static
+```
+
+5. Run the transpiler
+```shell
+bash transpile.sh
+```
+
+6. Run `cargo check`, there should be a small amount of errors. Fix them
+
+  a. There is one error with an easy fix that is consistent.
+  ```
+  error[E0425]: cannot find value `run_static_initializers` in this scope
+        --> lib/binding_rust/core_wrapper/core/api_raw.rs:303148:51
+         |
+  303148 | static INIT_ARRAY: [unsafe extern "C" fn(); 1] = [run_static_initializers];
+         |                                                   ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+         |
+  ```
+  In both `api_raw.rs` and `imported_parser.rs`, delete this `INIT_ARRAY` and associated attributes above it. Under `imported_parser.rs`, in the `tree_sitter_xxx()` function, before the `return &language` statement, put `run_static_initializers()`
+
+```diff
+pub unsafe extern "C" fn tree_sitter_xxxx() -> *const TSLanguage {
++   run_static_initialiezr();
+    return &language;
+}
+```
+
+7. Profit! Include new `tree-sitter` in your project
+```toml
+tree-sitter = { path = "tree-sitter/lib" }
+```
+
+Add your language like so, and use `tree-sitter as you normally would!`
+```rust
+let lang = unsafe { tree_sitter::Language::from_raw(tree_sitter::core::tree_sitter_xxxx()) };
+```
