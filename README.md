@@ -53,7 +53,7 @@ f. Run `cargo check`, there should be a small amount of errors. Fix them
 
 ```diff
 pub unsafe extern "C" fn tree_sitter_xxxx() -> *const TSLanguage {
-+   run_static_initialiezr();
++   run_static_initializers();
     return &language;
 }
 ```
