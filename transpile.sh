@@ -7,7 +7,7 @@ for file in lib/src/*.c; do
   emcc -Ibuild/libtree_sitter.a.p -Ibuild -I. -Ilib/include -Ilib -Ilib/src/wasm -Ilib/src -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=gnu99 -O3 -fPIC -E $file > lib/src/processed/$(basename $file)
 done
 
-c2rust transpile --emit-modules compile_commands.json
+c2rust transpile --emit-modules build/compile_commands.json
 
 mv lib/src/processed/*.rs lib/src
 
