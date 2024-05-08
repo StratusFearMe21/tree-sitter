@@ -40,7 +40,7 @@ bash transpile.sh
 
 f. Run `cargo check`, there should be a small amount of errors. Fix them
 
-  a. There is one error with an easy fix that is consistent.
+  1. There is one error with an easy fix that is consistent.
   ```
   error[E0425]: cannot find value `run_static_initializers` in this scope
         --> lib/binding_rust/core_wrapper/core/api_raw.rs:303148:51
