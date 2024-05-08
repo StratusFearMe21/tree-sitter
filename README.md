@@ -33,25 +33,6 @@ d. Compile a `compile_commands.json`
 meson setup build --buildtype=release --cross-file=wasm.txt --default-library=static
 ```
 
-e. Include your parser in `lib/src/lib.c`
-```diff
-#define _POSIX_C_SOURCE 200112L
-
-#include "./alloc.c"
-#include "./get_changed_ranges.c"
-+#include "./imported_parser.c"
-#include "./language.c"
-#include "./lexer.c"
-#include "./node.c"
-#include "./parser.c"
-#include "./query.c"
-#include "./stack.c"
-#include "./subtree.c"
-#include "./tree.c"
-#include "./tree_cursor.c"
-#include "./wasm_store.c"
-```
-
 e. Run the transpiler
 ```shell
 bash transpile.sh
