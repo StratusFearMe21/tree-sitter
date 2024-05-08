@@ -12,6 +12,7 @@ This repo allows you link `tree-sitter`, as well as a parser to a Rust WebAssemb
 ## Steps
 
 a. Compile the parser you want with `tree-sitter generate`
+
 b. Move the parser from `src/parser.c`, into this library at `lib/src/imported_parser.c`
 
   1. If The parser has a `scanner.c`, move that into `lib/src/imported_scanner.c`
