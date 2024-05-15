@@ -984,13 +984,13 @@ impl<'tree> Node<'tree> {
 
     /// Get a numeric id for this node that is unique.
     ///
-    /// Within a given syntax tree, no two nodes have the same id. However
+    /// Within a given syntax tree, no two nodes have the same id. However...
     ///
     // - If a new tree is created based on an older tree, and a node from the old
     /// tree is reused in the process, then that node will have the same id in
     /// both trees.
     ///
-    /// - Just because a node is not marked has having changed, does not mean it was reused
+    /// - Just because a node is not marked as having changed, does not mean it was reused
     ///
     /// - If a node is marked as having changed in the old tree, it will have no nodes in common with the new tree.
     #[must_use]
