@@ -992,7 +992,7 @@ impl<'tree> Node<'tree> {
     ///
     /// - Just because a node is not marked as having changed, does not mean it was reused
     ///
-    /// - If a node is marked as having changed in the old tree, it will have no nodes in common with the new tree.
+    /// - If a subnode of a node is marked as having changed in the old tree, it will not be reused
     #[must_use]
     pub fn id(&self) -> usize {
         self.0.id as usize
